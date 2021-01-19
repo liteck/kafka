@@ -1,4 +1,4 @@
-module kafka
+module github.com/liteck/kafka
 
 go 1.14
 
