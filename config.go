@@ -25,6 +25,10 @@ type Config struct {
 	Cert     []byte
 }
 
+func SetConfig(cfg Config) {
+	globalConfig = cfg
+}
+
 type Message struct {
 	Key   string
 	Msg   string
