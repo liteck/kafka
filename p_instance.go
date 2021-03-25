@@ -18,7 +18,11 @@ func GetProducer() PProducer {
 	return globalProducer
 }
 
-func (this PProducer) Init0() error {
+func Init0() error {
+	if globalProducer.inited {
+		log.Println("[生产者模块] 已经初始化,无需重复")
+		return nil
+	}
 	log.Println("[生产者模块] 初始化")
 	globalProducer = PProducer{}
 
@@ -28,15 +32,14 @@ func (this PProducer) Init0() error {
 		Password: globalConfig.Password,
 	}
 
-	this.p = Producer{}
-	this.inited = false
-	if err := this.p.Prepare(&cfg); err != nil {
-		this.p = Producer{}
+	globalProducer.p = Producer{}
+	globalProducer.inited = false
+	if err := globalProducer.p.Prepare(&cfg); err != nil {
+		globalProducer.p = Producer{}
 		return errors.New("消息队列生产者初始化失败:" + err.Error())
 	} else {
-		this.inited = true
+		globalProducer.inited = true
 	}
-
 	log.Println("[生产者模块] 初始化成功")
 	return nil
 }
