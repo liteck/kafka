@@ -18,6 +18,29 @@ func GetProducer() PProducer {
 	return globalProducer
 }
 
+func (this PProducer) Init0() error {
+	log.Println("[生产者模块] 初始化")
+	globalProducer = PProducer{}
+
+	cfg := ProducerConfig{
+		Servers:  globalConfig.Servers,
+		Ak:       globalConfig.UserName,
+		Password: globalConfig.Password,
+	}
+
+	this.p = Producer{}
+	this.inited = false
+	if err := this.p.Prepare(&cfg); err != nil {
+		this.p = Producer{}
+		return errors.New("消息队列生产者初始化失败:" + err.Error())
+	} else {
+		this.inited = true
+	}
+
+	log.Println("[生产者模块] 初始化成功")
+	return nil
+}
+
 func (this *PProducer) Init() error {
 	log.Println("[生产者模块] 初始化")
 	globalProducer = PProducer{}
